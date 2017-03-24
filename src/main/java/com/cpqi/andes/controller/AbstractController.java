@@ -25,14 +25,6 @@ public abstract class AbstractController {
 	    Principal principal = (Principal) authentication.getPrincipal();
 
 	    info.append("\nUser info:");
-	    info.append("\n\t| name: [");
-	    info.append(principal.getUsername());
-	    info.append("] \n\t| id: [");
-	    info.append(principal.getUserId());
-	    info.append("] \n\t| AccessLevel: [");
-	    info.append(principal.getAccessLevel());
-	    info.append("] \n\t| isLogged: [");
-	    info.append(principal.getLogged());
 	    info.append("]\n");
 
 	}
@@ -60,29 +52,6 @@ public abstract class AbstractController {
 	final StringBuilder info = new StringBuilder();
 
 	info.append(mark);
-	info.append("\nEntry method: [");
-	info.append(methodName);
-	info.append("] \n\t| Action: [");
-	info.append(action.value());
-	info.append("]\n");
-
-	if (principal != null) {
-	    info.append("\nUser info:");
-	    info.append("\n\t| name: [");
-	    info.append(principal.getUsername());
-	    info.append("] \n\t| id: [");
-	    info.append(principal.getUserId());
-	    info.append("] \n\t| AccessLevel: [");
-	    info.append(principal.getAccessLevel());
-	    info.append("] \n\t| isLogged: [");
-	    info.append(principal.getLogged());
-	    info.append("]\n");
-
-	}
-	logger.info(info.toString());
-
-	info.delete(0, info.length());
-    }
 
     protected void logInfoMethodEntry(long mark, final Logger logger, final String methodName, final AuditAction action, final String username) {
 	
