@@ -28,7 +28,7 @@ import com.cpqi.andes.viewmodel.ResponseViewModel;
 public class LoginController extends AbstractController {
     
     private static final Logger LOGGER = Logger.getLogger(LoginController.class);
-    
+		// TESTE TESTE TESTE
     @RequestMapping(value = { "/recaptcha" }, method = RequestMethod.POST)
     public ResponseEntity<Boolean> validateUserRecaptchaEntry(@RequestParam String response, HttpServletRequest request) {
 	Principal principal = getPrincipal(request);
