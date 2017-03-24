@@ -50,7 +50,7 @@ public abstract class AbstractController {
 	    info.append("\n");
 	}
 
-	logger.info(info.toString());
+
 
 	info.delete(0, info.length());
     }
