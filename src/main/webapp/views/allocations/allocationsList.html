@@ -1,0 +1,106 @@
+
+<form role="form">
+	<div>
+		<h2>Allocations</h2>
+		<br>
+
+		<div class="row">
+			<div class="col-lg-3">
+				<button type="button" ng-click="openModal()"
+					class="btn btn-info btn-lg">Create</button>
+				<br> <br>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-2">
+				<label for="cliente">Cliente:</label> <input class="form-control"
+					ng-change="searchClient()" ng-model="queryClient"
+					placeholder="Search" type="text" /><br>
+			</div>
+			<div class="col-lg-2">
+				<label for="project">Project:</label> <input class="form-control"
+					ng-change="searchProject()" ng-model="queryProject"
+					placeholder="Search" type="text" /><br>
+			</div>
+			<div class="col-lg-2">
+				<label for="phase">Phase:</label> <input class="form-control"
+					ng-change="search()" ng-model="query" placeholder="Search"
+					type="text" /><br>
+			</div>
+			<div class="col-lg-2">
+				<label for="user">User:</label> <input class="form-control"
+					ng-change="searchUser()" ng-model="queryUser" placeholder="Search"
+					type="text" /><br>
+			</div>
+			<div class="col-lg-2">
+				<label for="phase">User without allocation:</label> 
+				<input type="checkbox"
+					ng-model="queryUserCheck" ng-change="searchUserCheck()" class="form-control"  placeholder="Search">
+			</div>
+		</div>
+
+		<table class="table table-striped" id="allocationTable" at-table at-list="filteredItems" at-config="config" at-paginated>
+			<thead>
+				<tr> 
+					<th at-attribute="phase.project.client.name" class="sortableHeader">Cliente</th> 
+					<th at-attribute="phase.project.title" class="sortableHeader">Projeto</th>
+					<th at-attribute="phase.description" class="sortableHeader">Phase</th>
+					<th at-attribute="user.name" class="sortableHeader">User</th>
+					<th at-attribute="profile.description" class="sortableHeader">Profile</th>
+					<th at-attribute="price" class="sortableHeader">Price</th>
+					<th at-attribute="hoursPerDay" class="sortableHeader">Hour per day</th>
+					<th at-attribute="startDate" class="sortableHeader">Start date</th>
+					<th at-attribute="endDate" class="sortableHeader">End date</th>
+					<th at-attribute="billable" class="sortableHeader">Billable</th>
+					<th at-attribute="description" class="sortableHeader">Description</th>
+					<th at-attribute="totalHours" class="sortableHeader">Total hours</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr ng-repeat="allocation in filteredItems">
+				
+					<td at-implicit at-sortable at-attribute="phase.project.client.name" at-initial-sorting="asc"></td>
+					
+					<td at-implicit at-sortable at-attribute="phase.project.title"></td>
+					
+					<td at-implicit at-sortable at-attribute="phase.description"></td>
+					
+					<td at-implicit at-sortable at-attribute="user.name"></td>
+					
+					<td at-implicit at-sortable at-attribute="profile.description"></td>
+					
+					<td at-implicit at-sortable at-attribute="price"></td>
+					
+					<td at-implicit at-sortable at-attribute="hoursPerDay"></td>
+					
+					<td at-implicit at-sortable at-attribute="startDate"></td>
+					
+					<td at-implicit at-sortable at-attribute="endDate"></td>
+					
+					<td at-implicit at-sortable at-attribute="billable"></td>
+					
+					<td at-implicit at-sortable at-attribute="description"></td>
+					
+					<td at-implicit at-sortable at-attribute="totalHours"></td>
+					
+					<td class="textCenter">
+						<button type="button" data-toggle="modal" class="btn"
+							data-target="#modalCadastroUser" ng-click="openModal(item)"
+							name="update">Update</button>
+					</td>
+					<td class="textCenter">
+						<button type="button" data-toggle="modal"
+							class="btn btn-danger btn" ng-click="openModalDelete(item)"
+							name="delete">Delete</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		
+		Items per page: <select ng-model="config.itemsPerPage" ng-options="itemsPerPage for itemsPerPage in numberOfItemsPerPage"></select>
+		
+		<at-pagination at-config="config" at-list="filteredItems"></at-pagination>
+
+	</div>
+</form>

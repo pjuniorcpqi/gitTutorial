@@ -1,0 +1,33 @@
+<div class="panel panel-default">
+	<div class="panel-title">
+		<h2>Settings</h2>
+		<hr>
+		<div class="panel-body">
+			<div class="row">
+				<h3>TimeSheet</h3>
+				<br>
+				<div class="col-md-2">
+					<strong>Days to block timesheet</strong>
+				</div>
+				<div class="col-md-1 text-left">
+					<input type="text" class="form-control"
+						ng-model="settings.blockTimeSheet" />
+				</div>
+			</div>
+			<br>
+			<div class="row">
+				<div class="col-md-2">
+					<strong>Default View Mode</strong>
+				</div>
+				<div class="col-md-1">
+					<select class="form-control" ng-model="settings.viewModeTimesheet"
+						ng-options="viewMode for viewMode in viewModeOptions"></select>
+				</div>
+			</div>
+			<hr>
+			<div class="row col-md-1">
+				<button ng-click="submit(settings)" class="btn btn-warning">Send</button>
+			</div>
+		</div>
+	</div>
+</div>

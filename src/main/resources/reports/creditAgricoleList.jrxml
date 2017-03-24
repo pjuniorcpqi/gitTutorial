@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="creditAgricoleList" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true" uuid="b11fcd5c-2c61-400b-9d28-4d22e6d08847">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\hbezerra\\Documents\\topsecret\\andes\\MavenProject\\andes_cpqi\\src\\main\\resources\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="yearMonth" class="java.lang.String">
+		<defaultValueExpression><![CDATA["2016-09"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="users_id" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="users_sites" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="users_projects" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[SELECT
+  u.id_user as userId
+FROM
+  users u
+WHERE
+  ( $X{IN, u.id_user, users_id} ) and
+  ( $X{IN, u.id_site, users_sites} ) and
+  u.id_user in (
+    select a.id_user from allocations a where a.id_phase in (
+      select p.id_phase from phases p where $X{IN, p.id_project, users_projects}
+    )
+  ) and
+  trim(reports_util.worked_period(u.id_user, $P{yearMonth})) <> '-']]>
+	</queryString>
+	<field name="USERID" class="java.math.BigDecimal"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="125" splitType="Stretch">
+			<subreport>
+				<reportElement stretchType="RelativeToBandHeight" x="0" y="0" width="595" height="125" isRemoveLineWhenBlank="true" uuid="332ead11-dc9b-4373-9269-f5638d27b3e2"/>
+				<subreportParameter name="SUBREPORT_DIR"/>
+				<subreportParameter name="yearMonth">
+					<subreportParameterExpression><![CDATA[$P{yearMonth}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="idUser">
+					<subreportParameterExpression><![CDATA[$F{USERID}.longValue()]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["creditAgricoleReport.jasper"]]></subreportExpression>
+			</subreport>
+			<break>
+				<reportElement x="0" y="124" width="595" height="1" uuid="422c9310-be30-47d4-be8a-77d79a971243"/>
+			</break>
+		</band>
+	</detail>
+</jasperReport>

@@ -1,0 +1,79 @@
+<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<!-- Brand and toggle get grouped for better mobile display -->
+	<div class="navbar-header">
+		<button type="button" class="navbar-toggle" data-toggle="collapse"
+			data-target=".navbar-ex1-collapse">
+			<span class="sr-only">Toggle navigation</span> <span class="icon-bar"></span>
+			<span class="icon-bar"></span> <span class="icon-bar"></span>
+		</button>
+		<a class="navbar-brand" href="index.html"> <img
+			src="img/andesLogoName_blackBGColor_small.png" />
+		</a>
+	</div>
+	<!-- Top Menu Items -->
+	<div>
+		<ul class="nav navbar-right top-nav">
+			<li class="dropdown"><a href="#/profile" class="dropdown-toggle"
+				data-toggle="dropdown"><i class="fa fa-user"></i> <span
+					ng-bind="getUser().username" /></a>
+		</ul>
+	</div>
+	<!-- Sidebar Menu Items - These collapse to the responsive navigation menu on small screens -->
+	<div class="collapse navbar-collapse navbar-ex1-collapse"
+		ng-controller="LoginController">
+		<ul class="nav navbar-nav side-nav">
+			<li><a href="#/home"> <i class="fa fa-fw fa-dashboard"></i>
+					Home
+			</a></li>
+
+			<li><a href="#/timesheet"> <i
+					class="fa fa-fw fa-bar-chart-o"></i> TimeSheet
+			</a></li>
+			<li ng-if="isAdmin()"><a href="#/timesheetAdmin"> <i
+					class="fa fa-fw fa-bar-chart-o"></i> TimeSheetAdmin
+			</a></li>
+
+			<li ng-if="isAdmin()"><a href="#/currencyPage"> <i
+					class="fa fa-fw fa-table"></i> Currency
+			</a></li>
+
+			<li ng-if="isAdmin()"><a href="#/users"> <i
+					class="fa fa-fw fa-users"></i> User
+			</a></li>
+			<li ng-if="isAdmin()"><a href="#/sitePage"> <i
+					class="fa fa-fw fa-table"></i> Sites
+			</a></li>
+			<li ng-if="isAdmin()"><a href="#/clientPage"> <i
+					class="fa fa-fw fa-table"></i> Clients
+			</a></li>
+			<li ng-if="isAdmin()"><a href="#/holidays"> <i
+					class="fa fa-fw fa-table"></i> Holidays
+			</a></li>
+			<li ng-if="isAuthProjectsAllocationsPhases()"><a href="#/projects"> <i
+					class="fa fa-fw fa-table"></i> Projects
+			</a></li>
+			<li ng-if="isAuthProjectsAllocationsPhases()"><a href="#/phases"> <i
+					class="fa fa-fw fa-table"></i> Phases
+			</a></li>
+			<li ng-if="isAuthProjectsAllocationsPhases()"><a href="#/allocations"> <i
+					class="fa fa-fw fa-table"></i> Allocations
+			</a></li>
+			<li ng-if="isAuthReportByDate()"><a href="#/reportbydate"><i
+					class="fa fa-fw fa-table"></i> Relatorio por Periodo</a></li>
+			<li ng-if="isAuthReportByDate()"><a href="#/reportbyusersmonth"><i
+					class="fa fa-fw fa-table"></i> Relatorio de Usuarios</a></li>
+			<li ng-if="isAuthReportRevenue()"><a href="#/reportrevenue"><i
+					class="fa fa-fw fa-money"></i> Relatorio Faturamento</a></li>
+				<li ng-if="isAdmin()"><a href="#/settings"> <i
+					class="fa fa-fw fa-wrench"></i> Settings
+			</a></li>
+			<li><a href="#/login" ng-click="resetForm(getUser().username)"> <i
+					class="fa fa-fw fa-power-off"></i> Log Out
+			</a></li>
+		
+
+		</ul>
+
+	</div>
+	<!-- /.navbar-collapse -->
+</nav>

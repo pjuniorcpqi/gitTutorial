@@ -1,0 +1,26 @@
+<div class="container-fluid">
+
+	<div class="row">
+		<div class="col-md-4">
+			<h2>Client List</h2>
+			<table class="table">
+				<tr ng-repeat="client in clients | orderBy:'+name'">
+					<td>{{client.name}}</td>
+					<td ng-click="editRow(client)"><button
+							class="btn btn-info btn-xs">Edit</button></td>
+					<td ng-click="deleteRow(client)"><button
+							class="btn btn-danger btn-xs">Delete</button></td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<form role="form" class="form-inline" ng-submit="addRow()">
+		<div class="form-group">
+			<label for="ClientName">Name:</label> <input type="text"
+				class="form-control" id="ClientName" ng-model="name">
+		</div>
+		<button type="submit" class="btn btn-primary">Submit</button>
+	</form>
+
+</div>

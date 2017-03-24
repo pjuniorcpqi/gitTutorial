@@ -1,0 +1,113 @@
+<div class="container-fluid">
+	<div ng-show="erroMsgReport.length > 0">
+		<div class="alert alert-danger fade in">
+			<strong>Error!</strong>
+			<ul ng-repeat="err in erroMsgReport">
+				<li>{{err}}</li>
+			</ul>
+		</div>
+	</div>
+	<!-- Page Heading -->
+	<form role="form">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-yellow">
+					<div class="panel-heading">
+						<h3 class="panel-title">Relatorio de Usuarios</h3>
+					</div>
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-2">
+								<label for="datepicker">Month:*</label> <input id="datepicker"
+									type="text" class="form-control"
+									ng-model="reportFilter.monthYearSelected"
+									placeholder="Select month" />
+							</div>
+						</div>
+						<br />
+						<div class="row">
+							<div class="col-lg-3">
+								<label>Users:</label> <input type="text" class="form-control"
+									ng-model="reportFilter.userId"
+									uib-typeahead="user as user.name for user in reportUserByDate.users |  filter:{'name':$viewValue} | limitTo:8"
+									typeahead-on-select="onUserSelect($item, $model)"
+									placeholder="Enter username">
+							</div>
+							<div class="col-lg-3">
+								<label for="projects">Projects:</label> <input type="text"
+									class="form-control" ng-model="reportFilter.projectId"
+									uib-typeahead="project as project.title for project in reportUserByDate.projects |  filter:{'title':$viewValue} | limitTo:8"
+									typeahead-on-select="onProjectSelect($item, $model)"
+									placeholder="Enter Project Name">
+							</div>
+							<div class="col-lg-3">
+								<label for="sites">Sites:</label> <input type="text"
+									class="form-control" ng-model="reportFilter.siteId"
+									uib-typeahead="site as site.name for site in reportUserByDate.sites |  filter:{'name':$viewValue} | limitTo:8"
+									typeahead-on-select="onSiteSelect($item, $model)"
+									placeholder="Enter Site Name">
+							</div>
+						</div>
+						<br>
+						<div class="row">
+							<div class="col-lg-3">
+								<label>Users Selected:</label> <select class="form-control"
+									size=15 ng-model="user" ng-dblclick="removeUser(user)"
+									ng-options="user as user.name for user in reportFilterView.users | orderBy:'name'"></select>
+							</div>
+							<div class="col-lg-3">
+								<label>Projects Selected:</label> <select class="form-control"
+									size=15 ng-model="project" ng-dblclick="removeProject(project)"
+									ng-options="project as project.title for project in reportFilterView.projects | orderBy:'title'"></select>
+							</div>
+							<div class="col-lg-3">
+								<label>Sites Selected:</label> <select class="form-control"
+									size=15 ng-model="site" ng-dblclick="removeSite(site)"
+									ng-options="site as site.name for site in reportFilterView.sites | orderBy:'name'"></select>
+							</div>
+						</div>
+						</br> </br>
+						<div class="row">
+							<div class="col-lg-2"></div>
+							<div class="col-lg-10">
+								<div>
+									<div>
+										<div class="col-lg-3">
+											<a href="" class="btn btn-default" ng-click="print()"> <span
+												class="glyphicon glyphicon-print"></span> Print Timesheet Report
+											</a>
+										</div>
+										<div class="col-lg-2">
+											<button type="reset" ng-click="resetbtn()"
+												class="btn btn-default">Limpar</button>
+										</div>
+										<div class="col-lg-3">
+											<a href="" class="btn btn-default" ng-click="printCreditAgricoleReport()"> <span
+												class="glyphicon glyphicon-print"></span> Print Credit Agricole Report
+											</a>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</form>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#datepicker').datepicker({
+			format : "MM/yyyy",
+			autoclose : true,
+			viewMode: "months",
+			minViewMode: "months",
+			todayHighlight : true
+		});
+	});
+</script>
+

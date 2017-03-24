@@ -1,0 +1,79 @@
+
+<form role="form">
+	<div>
+		<h2>Phase</h2>
+		<br>
+
+		<div class="row">
+			<div class="col-lg-3">
+				<button type="button" ng-click="openModal()"
+					class="btn btn-info btn-lg">Create</button>
+				<br> <br>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-lg-3">
+				 <input class="form-control" ng-change="search()" ng-model="query" placeholder="Search" type="text" /><br>
+			</div>
+		</div>
+
+		<table class="table table-striped">
+			<thead>
+				<tr>
+					<th class="description">DESCRIPTION&nbsp;<a ng-click="sort_by('description')"><i class="icon-sort"></i></a></th>
+					<th>PROJECT</th>
+					<th>START DATE</th>
+					<th class="textCenter">END DATE</th>
+					<th class="textCenter">ACTION</th>
+					<th class="textCenter">ACTION</th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr
+					ng-repeat="phase in pagedItems[currentPage] | orderBy:sortingOrder:reverse"">
+					<td>
+						<h5>{{phase.description}}</h5>
+					</td>
+					<td>
+						<h5>{{phase.project.title}}</h5>
+					</td>
+					<td>
+						<h5>{{phase.startDate | date:'dd/MM/yyyy' }}</h5>
+					</td>
+					<td>
+						<h5>{{phase.endDate | date:'dd/MM/yyyy'}}</h5>
+					</td>
+					<td class="textCenter">
+						<button type="button" data-toggle="modal" class="btn"
+							data-target="#modalCadastroUser" ng-click="openModal(phase)"
+							name="update">Update</button>
+					</td>
+					<td class="textCenter">
+						<button type="button" data-toggle="modal"
+							class="btn btn-danger btn" ng-click="openModalDelete(phase)"
+							name="delete">Delete</button>
+					</td>
+				</tr>
+			</tbody>
+			<tfoot>
+				<td colspan="6">
+					<div >
+						<ul class="pagination pagination-sm">
+							<li ng-class="{disabled: currentPage == 0}"><a
+								ng-click="prevPage()"> Prev</a></li>
+							<li ng-class="{active: n == currentPage}" ng-click="setPage()"
+								ng-repeat="n in range(pagedItems.length)"><a
+								ng-bind="n + 1">1</a></li>
+							<li ng-class="{disabled: currentPage == pagedItems.length - 1}">
+								<a ng-click="nextPage()">Next </a>
+							</li>
+						</ul>
+					</div>
+				</td>
+			</tfoot>
+		</table>
+		
+	</div>
+</form>

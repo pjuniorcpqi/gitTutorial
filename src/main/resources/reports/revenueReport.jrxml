@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="revenueReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="b1c77a86-ca6c-4cc8-91f2-8fe2e53788a2">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="userId" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="projectId" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="startDate" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="endDate" class="java.sql.Timestamp">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="clientId" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="phaseId" class="java.util.Collection">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<parameter name="SUBREPORT_DIR" class="java.lang.String" isForPrompting="false">
+		<defaultValueExpression><![CDATA["C:\\Users\\hbezerra\\Documents\\topsecret\\andes\\MavenProject\\andes_cpqi\\src\\main\\resources\\reports\\"]]></defaultValueExpression>
+	</parameter>
+	<parameter name="requesterName" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[Select  distinct C.Name as clientName, Pro.Title as projectTitle, C.Id_client as clientId, Pro.id_project as projectId, Cur.code as currencyCode, TO_CHAR(SYSDATE, 'DD-MM-YYYY HH24:MI:SS') as now From Worklogs W
+Inner Join Allocations Al On Al.Id_Allocation = W.Id_Allocation
+Inner Join Users U On U.Id_User = Al.Id_User
+Inner Join Phases Ph On Ph.Id_Phase = Al.Id_Phase
+Inner Join Projects Pro On Pro.Id_Project = Ph.Id_Project
+Inner Join Clients C On C.Id_Client = Pro.Id_Client
+Inner Join Currencies Cur On Cur.Id_Currency = Pro.Id_Currency
+Where (W.Date_Of_Work >= $P{startDate} And W.Date_Of_Work <= $P{endDate})
+And ($X{IN, Pro.id_project, projectId})
+And ($X{IN, u.id_user, userId})
+And ($X{IN, c.id_client, clientId})
+And ($X{IN, ph.id_phase, phaseId})
+Order By C.Name, Pro.title]]>
+	</queryString>
+	<field name="CLIENTNAME" class="java.lang.String"/>
+	<field name="PROJECTTITLE" class="java.lang.String"/>
+	<field name="CLIENTID" class="java.math.BigDecimal"/>
+	<field name="PROJECTID" class="java.math.BigDecimal"/>
+	<field name="CURRENCYCODE" class="java.lang.String"/>
+	<field name="NOW" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="40" splitType="Stretch">
+			<rectangle>
+				<reportElement x="0" y="0" width="555" height="40" uuid="311bb17d-3ac2-4d2f-9894-dc84778f8b6a"/>
+				<graphicElement>
+					<pen lineWidth="0.5" lineStyle="Solid"/>
+				</graphicElement>
+			</rectangle>
+			<image>
+				<reportElement x="1" y="1" width="40" height="39" uuid="78fd6879-ef19-4ade-ab65-554eb3c38eea"/>
+				<imageExpression><![CDATA["andes LogoSmall.png"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="164" y="10" width="227" height="20" uuid="259cc8f4-e21a-4a59-b5cf-32cac64192b9"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="12"/>
+				</textElement>
+				<text><![CDATA[Relatório de faturamento - Andes - CPQi]]></text>
+			</staticText>
+			<image hAlign="Center" vAlign="Middle">
+				<reportElement x="438" y="0" width="117" height="40" uuid="bea8c0eb-a533-465b-9eb3-3b7d96fcc5b7"/>
+				<imageExpression><![CDATA["cpqi Logo.png"]]></imageExpression>
+			</image>
+		</band>
+	</title>
+	<pageHeader>
+		<band height="25" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="1" y="0" width="263" height="20" uuid="79ac3c11-898a-4011-a51b-b1f1a2058e05"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA["Time period: " + new SimpleDateFormat("dd/MM/yyyy").format($P{startDate}) + " - " + new SimpleDateFormat("dd/MM/yyyy").format($P{endDate})]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Prevent">
+			<textField>
+				<reportElement x="0" y="0" width="555" height="20" uuid="19f1ff80-4ff4-41bd-b1ba-b54bae029fc6"/>
+				<textElement>
+					<font size="12" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{CLIENTNAME} + " - " + $F{PROJECTTITLE}]]></textFieldExpression>
+			</textField>
+			<subreport>
+				<reportElement x="0" y="20" width="555" height="20" uuid="e3cd28f8-ec8c-4db9-b29e-64d45fc159d8"/>
+				<subreportParameter name="startDate">
+					<subreportParameterExpression><![CDATA[$P{startDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="currencyCode">
+					<subreportParameterExpression><![CDATA[$F{CURRENCYCODE}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="userId">
+					<subreportParameterExpression><![CDATA[$P{userId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="endDate">
+					<subreportParameterExpression><![CDATA[$P{endDate}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="projectId">
+					<subreportParameterExpression><![CDATA[$F{PROJECTID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="phaseId">
+					<subreportParameterExpression><![CDATA[$P{phaseId}]]></subreportParameterExpression>
+				</subreportParameter>
+				<subreportParameter name="clientId">
+					<subreportParameterExpression><![CDATA[$F{CLIENTID}]]></subreportParameterExpression>
+				</subreportParameter>
+				<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+				<subreportExpression><![CDATA["revenueReport_subreport1.jasper"]]></subreportExpression>
+			</subreport>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="12" splitType="Stretch">
+			<textField>
+				<reportElement x="145" y="0" width="264" height="12" uuid="9cd1101c-33a7-43ad-a4e1-e69b8fb8d86b"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA["Generated by " + $P{requesterName} + " at " + $F{NOW}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,257 @@
+<script type="text/javascript">
+ 	$(document).ready(function () {
+            	$("#datepickerStart").datepicker({
+         	    format: "dd/mm/yyyy",
+         	    autoclose: true,
+         	    todayHighlight: true
+         	});
+          	$("#datepickerEnd").datepicker({
+         	    format: "dd/mm/yyyy",
+         	    autoclose: true,
+         	    todayHighlight: true
+         	});
+ 	});
+</script>
+
+<style media="screen">
+  .textCenter{
+    text-align: center
+  }
+</style>
+
+<h2>Users</h2>
+<br>
+
+<button type="button" ng-click="createUser()" class="btn btn-info btn-lg" data-toggle="modal" data-target="#modalCadastroUser">Create</button>
+
+<br>
+<br>
+
+<div class="row">
+	<div class="col-sm-3">
+		 <input class="form-control" ng-model="search.name" placeholder="Search Users" type="text" /><br>
+	</div>
+
+	<label class="checkbox-inline"><input type="checkbox" ng-model="search.active"><strong>Active Users</strong></label>
+</div>
+
+<div ng-show="successMsg" class="alert alert-success fade in">
+  <button type="button" class="close" name="button" data-dismiss="alert">&times;</button>
+  <strong>Success!</strong>
+</div>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>
+      	<span class="sortableHeader" ng-click="order('name')"> Name </span> 
+      	<span class="sortorder" ng-show="predicate === 'name'" ng-class="{reverse:reverse}"></span>
+      </th>
+      <th>
+        <span class="sortableHeader" ng-click="order('email')"> E-mail </span> 
+      	<span class="sortorder" ng-show="predicate === 'email'" ng-class="{reverse:reverse}"></span>
+      </th>
+      <th class="textCenter">
+       	<span class="sortableHeader" ng-click="order('active')"> Active </span> 
+      	<span class="sortorder" ng-show="predicate === 'active'" ng-class="{reverse:reverse}"></span>
+      </th>
+      <th class="textCenter">
+        Allocations
+      </th>
+      <th>
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+      <tr ng-repeat="u in users | filter:search | orderBy:predicate:reverse">
+        <td>
+          <h5>{{u.name}}</h5>
+        </td>
+        <td>
+          <h5>{{u.email}}</h5>
+        </td>
+        <td class="textCenter">
+        
+          <span class="glyphicon glyphicon-ok" ng-show="u.active" ></span>
+          <span class="glyphicon glyphicon-remove" ng-show="!u.active"></span>
+        
+        </td>
+        <td class="textCenter">
+          <button type="button" data-toggle="modal" class="btn" data-target="#modalUserAllocation" ng-click="allocateUser(u)" name="allocate">Allocations</button>
+        </td>
+        <td class="textCenter">
+          <button type="button" data-toggle="modal" class="btn" data-target="#modalCadastroUser" ng-click="updateUser(u)" name="update">Update</button>
+        </td>
+      </tr>
+  </tbody>
+</table>
+
+<!-- Modal -->
+<div class="modal fade" id="modalCadastroUser" role="dialog">
+ <div class="modal-dialog">
+
+   <!-- Modal content-->
+   <div class="modal-content">
+     <div class="modal-header">
+       <h4 class="modal-title">{{ formUser.id == undefined ? "Create" : "Update"}} User</h4>
+     </div>
+     <div class="modal-body">
+       <div ng-show="erroMsg.length > 0">
+         <div class="alert alert-danger fade in">
+           <strong>Error!</strong>
+           <ul ng-repeat="err in erroMsg">
+             <li>{{err}}</li>
+           </ul>
+         </div>
+       </div>
+       <form role="form" ng-submit="processUser()">
+         <div class="form-group">
+           <label for="name">Name:</label>
+           <input type="text" class="form-control" id="name" name="name" ng-model="formUser.name">
+         </div>
+         <div class="form-group">
+           <label for="password">Password:</label>
+           <input type="password" class="form-control" id="password" name="password" ng-model="formUser.password">
+         </div>
+         <div class="form-group">
+         
+           <label for="email">Email:</label>
+           <input type="email" class="form-control" id="email" name="email" ng-model="formUser.email">
+         </div>
+         <div class="row">
+         	<div class="col-sm-6">
+         		<div class="form-group">
+		           <label for="admissionDate">Data de admissão:</label>
+		           <input type="text" class="form-control" id="admissionDate" placeholder="dd/mm/yyyy" name="admissionDate" ng-model="formUser.admissionDate">
+		         </div>
+         	</div>
+         	<div class="col-sm-6">
+         		<div class="form-group">
+		           <label for="interval">Intervalo intra jornada:</label>
+		           <input type="text" class="form-control" id="interval" name="interval" ng-model="formUser.interval">
+		         </div>
+         	</div>
+         </div>
+         <div class="row">
+         	<div class="col-sm-6">
+         		<div class="form-group">
+		           <label for="entranceTime">Entrada:</label>
+		           <input type="text" class="form-control" id="entranceTime" name="entranceTime" ng-model="formUser.entranceTime">
+		         </div>
+         	</div>
+         	<div class="col-sm-6">
+         		<div class="form-group">
+		           <label for="exitTime">Saída:</label>
+		           <input type="text" class="form-control" id="exitTime" name="exitTime" ng-model="formUser.exitTime">
+		         </div>
+         	</div>
+         </div>
+         <div class="row">
+         	<div class="col-sm-6">
+         		<div class="form-group">
+		           <label for="pis">Função / PIS:</label>
+		           <input type="text" class="form-control" id="pis" name="pis" ng-model="formUser.pis">
+		        </div>
+         	</div>
+         	<div class="col-sm-6">
+         		<div class="form-group">
+		           <label for="workingHours">Jornada de trabalho:</label>
+		           <input type="text" class="form-control" id="workingHours" name="workingHours" ng-model="formUser.workingHours">
+		         </div>
+         	</div>
+         </div>
+         <div class="row">
+         	<div class="col-sm-6">
+         		<div class="form-group">
+		           <label for="accessLevel">Access Level:</label>
+		           <br/>
+		           <select id="accessLevel" class="form-control" ng-model="formUser.accessLevel" ng-options="x as x.description for x in accessLevels track by x.id">
+		           </select>
+		         </div>
+         	</div>
+         	<div class="col-sm-6">
+         		<div class="form-group">
+		           <label for="site">Site:</label>
+		           <br/>
+		           <select id="site" class="form-control" ng-model="formUser.site" ng-options="y as y.name for y in sites track by y.id">
+		           </select>
+		         </div>
+         	</div>
+         </div>
+         <div class="checkbox">
+           <label><input id="active" name="active" type="checkbox" ng-model="formUser.active"> Active</label>
+         </div>
+         
+         <div class="modal-footer">
+           <button type="submit" class="btn btn-success">{{ formUser.id == undefined ? "Create" : "Update"}} </button>
+           <button id="btnCloseModal" type="button" class="btn btn-default" data-dismiss="modal"> Close </button>
+         </div>
+       </form>
+     </div>
+   </div>
+
+ </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="modalUserAllocation" role="dialog">
+ <div class="modal-dialog modal-lg">
+
+   <!-- Modal content-->
+   <div class="modal-content">
+     <div class="modal-header">
+       <h4 class="modal-title">Allocations</h4>
+     </div>
+     <div class="modal-body">
+       <div ng-show="erroMsg.length > 0">
+         <div class="alert alert-danger fade in">
+           <strong>Error!</strong>
+           <ul ng-repeat="err in erroMsg">
+             <li>{{err}}</li>
+           </ul>
+         </div>
+       </div>
+       <form role="form" ng-submit="processUserAllocation()">
+        
+        <table class="table table-striped">
+			<thead>
+				<tr>
+					<th>Is allocated</th>
+					<th>Client</th>
+					<th>Project</th>
+					<th>Phase</th>
+					<th>Profile</th>
+					<th>Description</th>
+				</tr>
+			</thead>
+			<tbody>
+	        	<tr ng-repeat="allocation in allocations">
+        			<td><input type="checkbox" name="allocations[]" 
+        					ng-click="toggleUserAllocation(allocation, toDeleteAllocations)" ng-checked="true"></td>
+        			<td>{{allocation.phase.project.client.name}}</td>
+        			<td>{{allocation.phase.project.title}}</td>
+        			<td>{{allocation.phase.description}}</td>
+        			<td>{{allocation.profile.description}}</td>
+        			<td>{{allocation.description}}</td>
+	        	</tr>
+	        	<tr ng-repeat="allocation in noUserAllocations">
+        			<td><input type="checkbox" name="noUserAllocations[]" 
+        					ng-click="toggleUserAllocation(allocation, newAllocations)"></td>
+        			<td>{{allocation.phase.project.client.name}}</td>
+        			<td>{{allocation.phase.project.title}}</td>
+        			<td>{{allocation.phase.description}}</td>
+        			<td>{{allocation.profile.description}}</td>
+        			<td>{{allocation.description}}</td>
+	        	</tr>
+        	</tbody>
+        </table>
+         
+		<div class="modal-footer">
+		  <button type="submit" class="btn btn-success"> Save </button>
+		  <button id="btnCloseAllocateModal" type="button" class="btn btn-default" data-dismiss="modal"> Close </button>
+		</div>
+       </form>
+     </div>
+   </div>
+
+ </div>
+</div>

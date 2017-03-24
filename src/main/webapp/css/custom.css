@@ -1,0 +1,17 @@
+@CHARSET "ISO-8859-1";
+
+#allocationTable th, #allocationTable td {
+	text-align: center;
+}
+
+.sortorder:after {
+  content: '\25b2';
+}
+.sortorder.reverse:after {
+  content: '\25bc';
+}
+
+.sortableHeader:hover {
+	cursor: pointer; 
+	cursor: hand;
+}

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="usersListTimeSheet_subreport1" pageWidth="555" pageHeight="802" columnWidth="555" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" uuid="06875216-a371-4648-8286-426760cfc32f">
+	<property name="ireport.zoom" value="1.7715610000000013"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<parameter name="idUser" class="java.math.BigDecimal">
+		<defaultValueExpression><![CDATA[965]]></defaultValueExpression>
+	</parameter>
+	<parameter name="yearMonth" class="java.lang.String">
+		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
+	</parameter>
+	<queryString>
+		<![CDATA[select
+to_char(t.date_of_work, 'dd/mm/rrrr') as date_worked,
+t.in_time_1,
+t.out_time_1,
+t.in_time_2,
+t.out_time_2,
+t.in_time_3,
+t.out_time_3,
+t.time_worked
+ from table(reports_util.timesheet_report(  $P{yearMonth}, $P{idUser})) t]]>
+	</queryString>
+	<field name="DATE_WORKED" class="java.lang.String"/>
+	<field name="IN_TIME_1" class="java.lang.String"/>
+	<field name="OUT_TIME_1" class="java.lang.String"/>
+	<field name="IN_TIME_2" class="java.lang.String"/>
+	<field name="OUT_TIME_2" class="java.lang.String"/>
+	<field name="IN_TIME_3" class="java.lang.String"/>
+	<field name="OUT_TIME_3" class="java.lang.String"/>
+	<field name="TIME_WORKED" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band splitType="Stretch"/>
+	</pageHeader>
+	<columnHeader>
+		<band splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="15" splitType="Stretch">
+			<textField>
+				<reportElement x="0" y="0" width="61" height="15" uuid="4ecd3b58-2c0a-43d4-8a82-c896fcf4025f"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{DATE_WORKED}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="61" y="0" width="61" height="15" uuid="2e547b45-834f-42fc-8343-dc6f6d305321"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IN_TIME_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="122" y="0" width="61" height="15" uuid="f1383739-3d81-480d-9534-903001838c61"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OUT_TIME_1}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="183" y="0" width="61" height="15" uuid="c2ba2f86-4c43-4150-8a81-5298df3d8034"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IN_TIME_2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="244" y="0" width="61" height="15" uuid="36763104-0cbc-4f1b-b583-2f84135401da"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OUT_TIME_2}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="305" y="0" width="61" height="15" uuid="a49af663-0761-4d3b-8da7-e26aab26c9c9"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{IN_TIME_3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="366" y="0" width="61" height="15" uuid="b2a64347-238f-49d8-bb31-6cccbee35dee"/>
+				<textElement verticalAlignment="Middle">
+					<font size="8"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{OUT_TIME_3}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="427" y="0" width="61" height="15" uuid="66df1c4a-f03f-4401-80e2-cd205cf9ab89"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font size="8" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{TIME_WORKED}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band splitType="Stretch"/>
+	</summary>
+</jasperReport>

@@ -1,0 +1,214 @@
+<body ng-controller="TimeSheetController">
+	<div class="panel panel-yellow">
+		<div class="text-center panel-heading">
+			<h1 class="panel-title">Time Sheet</h1>
+			<p>{{userName}} - {{thisMonthName}}, {{thisYear}}</p>
+		</div>
+		<br />
+		<div class="text-center">
+			<div class="col-md-1">
+				<b><p>Month:</p></b>
+			</div>
+			<div class="col-md-1">
+				<input id="datepickerStart" type="text" class="form-control"
+					ng-model="monthSelected" ng-change="initScopes()"
+					placeholder="Select month" />
+			</div>
+
+			<div class="col-md-1 text-right">
+				<strong>View Mode:</strong>
+			</div>
+			<div class="col-md-1">
+				<select class="form-control" ng-model="viewMode"
+					ng-change=setItemsPerPage(viewMode)
+					ng-options="viewMode for viewMode in viewModeOptions"></select>
+			</div>
+			<div class="col-md-1 text-right">
+				<strong>User:</strong>
+			</div>
+			<div class="col-md-2">
+				<input type="text" class="form-control" ng-model="userSelected" ng-blur="changeUser()"  
+				uib-typeahead="user as user.name for user in userList |  filter:{'name':$viewValue} | limitTo:8" placeholder="Enter username">
+			</div>
+			<div class="col-md-1 text-right">
+				<strong>Total:</strong>
+			</div>
+			<div class="col-md-1">
+				<input class="form-control" type="text" readonly
+					ng-value="calculateTotalHoursFromMonth(timeSheets)"
+					ng-model="totalHours" ng-style="{'color' : hoursColor}">
+			</div>
+			<div class="col-md-1 text-right">
+				<a href="" class="btn btn-default" ng-click="printReport()"> <span
+					class="glyphicon glyphicon-print"></span> Print
+				</a>
+			</div>
+			<div class="col-md-1 text-right">
+				<button ng-show="!alreadyLocked(timeSheets)" ng-click="lockWorklogsFromMonth(timeSheets)" class="btn btn-warning">Lock WorkLogs</button>
+				<button ng-show="alreadyLocked(timeSheets)" ng-click="unlockWorklogsFromMonth(timeSheets)" class="btn btn-info">Unlock WorkLogs</button>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col-lg-12 text-center">
+				<hr>
+			</div>
+		</div>
+
+		<div class="panel-body" style="padding: 0px">
+			<div class="col-md-3 text-right">
+				<b>Date</b>
+			</div>
+			<div class="col-md-1">
+				<b>&nbsp; In 1</b>
+			</div>
+			<div class="col-md-1">
+				<b>&nbsp; Out 1</b>
+			</div>
+			<div class="col-md-1">
+				<b>&nbsp; In 2</b>
+			</div>
+			<div class="col-md-1">
+				<b>Out 2</b>
+			</div>
+			<div class="col-md-1">
+				<b>In 3</b>
+			</div>
+			<div class="col-md-1">
+				<b>Out 3</b>
+			</div>
+			<div class="col-md-1">
+				<b>Total</b>
+			</div>
+		</div>
+		<div class="panel-body" style="padding: 0px; border: 6px"
+			ng-style="{'background-color':$index %2 == 0 ?  '#f5f5f5': '#e8e8e8'}"
+			ng-repeat="day in timeSheets.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))">
+			<form>
+				<div class="panel-body">
+					<div class="col-md-1 text-right">
+						<h5>
+							<strong>{{day.holiday.description}}</strong> <strong>{{day.date
+								| date:'dd/MM/yyyy'}}</strong>
+						</h5>
+						<h6>
+							<strong>{{getWeekDay(day.date)}}</strong>
+						</h6>
+
+					</div>
+					<div class="col-md-1">
+						<input class="form-control timepicker" type="text"
+							ng-blur="validateTimelogs(day)" ng-model="day.timeLog.inTime1"
+							placeholder="In 1">
+					</div>
+					<div class="col-md-1">
+						<input class="form-control timepicker" type="text"
+							ng-blur="validateTimelogs(day); fillTimeInserted(day);"
+							ng-model="day.timeLog.outTime1"
+							ng-disabled="!day.timeLog.inTime1.length" placeholder="Out 1">
+					</div>
+
+					<div class="col-md-1">
+						<input class="form-control timepicker" type="text"
+							ng-blur="validateTimelogs(day)" ng-model="day.timeLog.inTime2"
+							ng-disabled="!day.timeLog.outTime1.length || !day.timeLog.inTime1.length"
+							placeholder="In 2">
+					</div>
+					<div class="col-md-1">
+						<input class="form-control timepicker" type="text"
+							ng-blur="validateTimelogs(day); fillTimeInserted(day);"
+							ng-model="day.timeLog.outTime2"
+							ng-disabled="!day.timeLog.inTime2.length || !day.timeLog.outTime1.length || !day.timeLog.inTime1.length"
+							placeholder="Out 2">
+					</div>
+
+					<div class="col-md-1">
+						<input class="form-control timepicker" type="text"
+							ng-blur="validateTimelogs(day)" ng-model="day.timeLog.inTime3"
+							ng-disabled="!day.timeLog.outTime2.length || !day.timeLog.inTime2.length
+											|| !day.timeLog.outTime1.length || !day.timeLog.inTime1.length"
+							placeholder="In 3">
+					</div>
+					<div class="col-md-1">
+						<input class="form-control timepicker" type="text"
+							ng-blur="validateTimelogs(day); fillTimeInserted(day);"
+							ng-model="day.timeLog.outTime3"
+							ng-disabled="!day.timeLog.inTime3.length || !day.timeLog.outTime2.length || !day.timeLog.inTime2.length
+												|| !day.timeLog.outTime1.length || !day.timeLog.inTime1.length"
+							placeholder="Out 3">
+					</div>
+
+					<div class="col-md-1">
+						<input class="form-control" type="text" readonly
+							ng-model="day.timeLog.total"
+							ng-init="calculateTotal(day,day.timeLog.inTime1,day.timeLog.outTime1,day.timeLog.inTime2,day.timeLog.outTime2,day.timeLog.inTime3,day.timeLog.outTime3);">
+
+					</div>
+					<div class="col-md-1">
+						<button ng-click="submit(day)" class="btn btn-warning">Send</button>
+					</div>
+					<div class="col-md-1">
+						<button ng-click="openModalDelete(day)" class="btn btn-danger">Clear</button>
+					</div>
+					<div class="col-md-2">
+						<div class="dropdown" ng-if="!day.timeLog || !day.timeLog.absenceReason">
+							<button class="btn btn-info dropdown-toggle" type="button" data-toggle="dropdown">Mark as absence
+						    <span class="caret"></span></button>
+						    <ul class="dropdown-menu">
+						    	<li ng-repeat="reason in absenceReasons" ng-click="toggleAbsence(day, reason.id)"><a href="">{{reason.name}}</a></li>
+						    </ul>
+						</div>
+						<button ng-click="toggleAbsence(day, 0)" ng-if="day.timeLog.absenceReason" class="btn btn-info">Unmark as absence</button>
+					</div>
+				</div>
+				<div class="panel-body" ng-repeat="w in day.workLogs">
+					<div class="col-md-3 text-right">
+						<h5>
+							<b ng-show="w.revenueLock">Locked - </b>
+							<b>{{w.allocation.phase.project.title}} -
+								{{w.allocation.profile.description}}</b>
+						</h5>
+					</div>
+					<div class="col-md-6">
+						<input class="form-control input-sm" type="text"
+							ng-model="w.comments" ng-disabled="w.revenueLock" placeholder="Insert comment here">
+					</div>
+					<div class="col-md-1">
+						<input class="form-control timepicker" type="text"
+							ng-blur="fillLastTimeInserted(day)" ng-model="w.timeInserted" ng-disabled="w.revenueLock" 
+							ng-init="createTimepickerStringFromNumber(w)"
+							placeholder="Time worked">
+					</div>
+				</div>
+
+			</form>
+		</div>
+	</div>
+	<div class="text-center">
+		<uib-pagination total-items="totalItems" ng-model="currentPage"
+			class="pagination-sm text-center" items-per-page="itemsPerPage"></uib-pagination>
+	</div>
+
+	</div>
+
+	<script type="text/javascript">
+			$(document).ready(function () {
+            	$("#datepickerStart").datepicker({
+            		format: "MM/yyyy",
+             	  	viewMode: "months",
+             	    minViewMode: "months",
+             	    autoclose: true
+         		});
+			});
+			$(function() {
+			     $('body').on('focus', ".timepicker", function() {
+			      $(this).timepicker({
+			       template : false,
+			       showInputs : false,
+			       minuteStep : 5,
+			       showMeridian : false,
+			       maxHours : 24,
+			       defaultTime: false
+			      });
+			     });
+			    });
+		</script>

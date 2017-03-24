@@ -1,0 +1,289 @@
+<h2>Holidays</h2>
+<br />
+<div>
+	<input id="monthDate" type="text" class="form-control"
+		ng-model="monthSelected" ng-change="refreshByMonth()"
+		placeholder="Select a month..." /> <br />
+
+	<button type="button" class="btn btn-default"
+		ng-click="clearSelectedMonth(); reloadScope()">All</button>
+</div>
+<br />
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Date</th>
+			<th>Description</th>
+			<th>Site</th>
+		</tr>
+	</thead>
+	<tbody class="searchable">
+		<tr ng-repeat="x in holidays | orderBy : 'holidayDate'">
+			<td>{{ $index + 1 }}</td>
+			<td>{{ x.holidayDate | date:'dd/MM/yyyy' }}</td>
+			<td>{{ x.description }}</td>
+			<td>
+				<ul class="list-inline">
+					<li class="list-group-item" ng-repeat="y in x.sites">{{y.name}}</li>
+
+				</ul>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<div align="right">
+	<button type="button" class="btn btn-default" data-toggle="modal"
+		data-target="#registerModal"
+		ng-click="clearHolidayList(); loadSites()">Register</button>
+
+	<button type="button" class="btn btn-default" data-toggle="modal"
+		data-target="#updateModal" ng-click="clearSelectedHoliday()">Update</button>
+
+	<button type="button" class="btn btn-danger" data-toggle="modal"
+		data-target="#deleteModal" ng-click="clearSelectedHolidayList()">Remove</button>
+</div>
+
+<!-- Create Modal -->
+<div id="registerModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-lg">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+
+
+			<!-- modal header -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					ng-click="clearHolidayList(); reloadScope()">&times;</button>
+				<h4 class="modal-title">Register new holidays</h4>
+			</div>
+			<!-- modal header -->
+
+			<!-- modal body -->
+			<div class="modal-body">
+
+
+				<!-- Form -->
+
+				<div align="center">
+					<form class="form-inline" role="form">
+
+						<div class="form-group">
+							<label for="holidayDate">Date:</label> <input type="text"
+								class="form-control" id="holidayDate" ng-model="date"
+								placeholder="Choose a date">
+						</div>
+						<div class="form-group">
+							<label for="holidayDescription">Description:</label> <input
+								type="text" class="form-control" id="holidayDescription"
+								ng-model="desc" placeholder="Enter a description">
+						</div>
+						<div class="form-group">
+							<label for="holidaySites">Sites:</label> <select
+								id="holidaySites" ng-model="selectedSites" class="form-control"
+								ng-options="s.name for s in sites" multiple>
+							</select>
+						</div>
+						<div class="btn">
+							<button type="button" class="btn btn-default"
+								ng-click="addRow(); clearHolidayForm()">Add</button>
+						</div>
+					</form>
+				</div>
+				<!-- Formul�rio -->
+				<br />
+				<!-- list -->
+				<div>
+
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>#</th>
+								<th>Date</th>
+								<th>Description</th>
+								<th>Sites</th>
+								<th></th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr
+								ng-repeat="holiday in toSaveHolidayList | orderBy : 'holidayDate'">
+								<td>{{ $index + 1 }}</td>
+								<td>{{ holiday.holidayDate | date:'dd/MM/yyyy' }}</td>
+								<td>{{ holiday.description }}</td>
+								<td>
+									<ul class="list-inline">
+										<li class="list-group-item" ng-repeat="y in holiday.sites">{{y.name}}</li>
+
+									</ul>
+								</td>
+								<td><button type="button" class="close"
+										ng-click="removeHoliday()">&times;</button></td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+				<!-- list -->
+
+
+			</div>
+			<!-- modal body -->
+
+			<!-- modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default"
+					ng-click="saveHolidays(); clearHolidayList()">Save</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal"
+					ng-click="clearHolidayList()">Close</button>
+			</div>
+			<!-- modal footer -->
+
+		</div>
+
+	</div>
+</div>
+
+<!-- **************************** UPDATE MODAL -->
+
+<div id="updateModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-lg">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+
+
+			<!-- modal header -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					ng-click="clearSelectedHoliday()">&times;</button>
+				<h4 class="modal-title">Update holidays</h4>
+			</div>
+			<!-- modal header -->
+
+			<!-- modal body -->
+			<div class="modal-body">
+
+				<div class="form-group">
+					<label for="holidayChoose">Holiday:</label> <select
+						id="holidayChoose" ng-model="selectedHoliday" class="form-control"
+						ng-options="h.holidayDate | date:'dd/MM/yyyy' for h in holidays"
+						ng-click="clearSelectedSites()"></select>
+				</div>
+
+				<br />
+				<!-- list -->
+				<div>
+
+					<form class="form" role="form">
+
+						<div class="form-group">
+							<label for="holidayDate">Date:</label> <input type="text"
+								class="form-control" id="holidayDate"
+								value="{{selectedHoliday.holidayDate | date:'dd/MM/yyyy'}}"
+								disabled>
+						</div>
+						<div class="form-group">
+							<label for="holidayDescription">Description:</label> <input
+								type="text" class="form-control" id="holidayDescription"
+								value="selectedHoliday.description"
+								ng-model="selectedHoliday.description">
+						</div>
+
+						<div class="form-group">
+							<label for="holidaySites">Sites:</label> <select
+								ng-disabled="!selectedHoliday.holidayDate" id="holidaySites"
+								ng-model="selectedSites" class="form-control"
+								ng-options="s.name for s in sites" multiple="multiple">
+							</select> <br />
+							<button id="addSitesButton" type="button" ng-click="addNewSite()"
+								class="btn btn-default"
+								ng-disabled="!selectedHoliday.holidayDate">Add</button>
+						</div>
+
+						<div class="form-group">
+							<table class="table table-striped">
+								<thead>
+									<tr>
+										<th>#</th>
+										<th>Site</th>
+										<th></th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr ng-repeat="site in selectedHoliday.sites">
+										<td>{{ $index + 1 }}</td>
+										<td>{{ site.name }}</td>
+										<td><button type="button" class="close"
+												ng-click="removeSite()">&times;</button></td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+
+					</form>
+				</div>
+				<!-- list -->
+			</div>
+			<!-- modal body -->
+
+			<!-- modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default"
+					ng-click="updateHolidayDate()">Update</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal"
+					ng-click="clearSelectedHoliday()">Close</button>
+			</div>
+			<!-- modal footer -->
+
+		</div>
+
+	</div>
+</div>
+<!-- **************************** UPDATE MODAL -->
+<!-- **************************** delete MODAL -->
+
+<div id="deleteModal" class="modal fade" role="dialog">
+	<div class="modal-dialog modal-lg">
+
+		<!-- Modal content-->
+		<div class="modal-content">
+
+
+			<!-- modal header -->
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					ng-click="clearSelectedHolidayList()">&times;</button>
+				<h4 class="modal-title">Remove holidays</h4>
+			</div>
+			<!-- modal header -->
+
+			<!-- modal body -->
+			<div class="modal-body">
+
+				<div class="form-group">
+					<label for="holidayChoose">Holiday:</label> <select
+						id="holidayChoose" ng-model="selectedHolidayList"
+						class="form-control"
+						ng-options="h.holidayDate | date:'dd/MM/yyyy' for h in holidays"
+						multiple></select>
+				</div>
+			</div>
+			<!-- modal body -->
+
+			<!-- modal footer -->
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger"
+					ng-click="removeHolidayDate()">Remove</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal"
+					ng-click="clearSelectedHolidayList()">Close</button>
+			</div>
+			<!-- modal footer -->
+
+		</div>
+
+	</div>
+</div>
+<!-- **************************** delete MODAL -->

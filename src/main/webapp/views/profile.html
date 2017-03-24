@@ -1,0 +1,52 @@
+<div class="col-md-3">
+	<form role="form" ng-submit="processUser()">
+		<div class="form-group">
+			<label for="name">Name*:</label> <input type="text"
+				class="form-control" id="name" placeholder="Enter name" name="name"
+				ng-model="formUser.name">
+		</div>
+		<div class="form-group">
+			<label for="password">Password:</label> <input type="password"
+				class="form-control" id="password" placeholder="Enter password"
+				name="password" ng-model="formUser.password">
+		</div>
+		<div class="form-group">
+			<label for="email">Email*:</label> <input type="email"
+				class="form-control" id="email" placeholder="Enter email"
+				name="email" ng-model="formUser.email">
+		</div>
+		<div class="form-group">
+			<label for="site">Site:</label> <br /> <select id="site"
+				class="form-control" ng-model="formUser.site"
+				ng-options="y as y.name for y in sites track by y.id">
+			</select>
+		</div>
+   		<div class="form-group">
+           <label for="admissionDate">Data de admissão:</label>
+           <input type="text" class="form-control" id="admissionDate" placeholder="dd/mm/yyyy" name="admissionDate" ng-model="formUser.admissionDate">
+        </div>
+   		<div class="form-group">
+           <label for="interval">Intervalo intra jornada:</label>
+           <input type="text" class="form-control" id="interval" name="interval" ng-model="formUser.interval">
+        </div>
+   		<div class="form-group">
+           <label for="entranceTime">Entrada:</label>
+           <input type="text" class="form-control" id="entranceTime" name="entranceTime" ng-model="formUser.entranceTime">
+        </div>
+    	<div class="form-group">
+           <label for="exitTime">Saída:</label>
+           <input type="text" class="form-control" id="exitTime" name="exitTime" ng-model="formUser.exitTime">
+        </div>
+   		<div class="form-group">
+           <label for="pis">Função / PIS:</label>
+           <input type="text" class="form-control" id="pis" name="pis" ng-model="formUser.pis">
+        </div>
+       	<div class="form-group">
+           <label for="workingHours">Jornada de trabalho:</label>
+           <input type="text" class="form-control" id="workingHours" name="workingHours" ng-model="formUser.workingHours">
+        </div>
+	
+		<button type="submit" class="btn btn-success">Update</button>
+	</form>
+
+</div>

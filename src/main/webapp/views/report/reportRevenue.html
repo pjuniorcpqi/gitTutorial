@@ -1,0 +1,134 @@
+<div class="container-fluid">
+	<div ng-show="erroMsgReportRevenue.length > 0">
+		<div class="alert alert-danger fade in">
+			<strong>Error!</strong>
+			<ul ng-repeat="err in erroMsgReportRevenue">
+				<li>{{err}}</li>
+			</ul>
+		</div>
+	</div>
+	<!-- Page Heading -->
+	<form role="form" ng-submit="pesquisar()">
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-yellow">
+					<div class="panel-heading">
+						<h3 class="panel-title">Relatorio de faturamento</h3>
+					</div>
+					
+					<div class="panel-body">
+						<div class="row">
+							<div class="col-lg-3" id="date-container-revenue">
+								<label for="datepicker">Date range*:</label>
+								<div class="input-daterange input-group" id="datepicker">
+									<input type="text" class="input-sm form-control"
+										ng-model="reportFilter.startDate" required /> <span
+										class="input-group-addon">to</span> <input type="text"
+										class="input-sm form-control" ng-model="reportFilter.endDate" />
+								</div>
+							</div>
+						</div>
+						<br/>
+						<div class="row">
+							<div class="col-lg-3">
+								<label for="clients">Clients:</label> <select id="clients"
+									ng-model="reportFilter.clientId" class="form-control" size=15
+									ng-options="client.id as client.name for client in reportUserByDate.clients | orderBy:'name'"
+									multiple></select>
+							</div>
+							<div class="col-lg-3">
+								<label for="projects">Projects:</label> <select id="projects"
+									ng-model="reportFilter.projectId" class="form-control" size=15
+									ng-options="project.id as project.title for project in reportUserByDate.projects | orderBy:'title'"
+									multiple></select>
+							</div>
+							<div class="col-lg-3">
+								<label for="phases">Phases:</label> <select id="phases"
+									ng-model="reportFilter.phaseId" class="form-control" size=15
+									ng-options="phase.id as phase.description for phase in reportUserByDate.phases | orderBy:'description'"
+									multiple></select>
+							</div>
+							<div class="col-lg-3">
+								<label for="professionals">Professionals:</label> <select
+									id="professionals" ng-model="reportFilter.userId"
+									class="form-control" size=15
+									ng-options="user.id as user.name for user in reportUserByDate.users | orderBy:'name'"
+									multiple></select>
+							</div>
+						</div>
+						</br> </br>
+						<div class="row">
+							<div class="col-lg-offset-3 col-lg-4">
+								<div>
+									<div>
+										<div class="col-lg-3 text-right">
+											<a href="" class="btn btn-default" ng-click="printReport()"> <span
+												class="glyphicon glyphicon-print"></span> Print
+											</a>
+										</div>
+										<div class="col-lg-3">
+											<button type="submit" class="btn btn-default">Pesquisar</button>
+										</div>
+										<div class="col-lg-3">
+											<button type="reset" ng-click="resetbtn()"
+												class="btn btn-default">Limpar</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="table-responsive"
+				ng-repeat="project in reportResult | orderBy:'clientName'">
+				<h3>{{project.clientName + " - " + project.projectName}}</h3>
+				<table class="table table-bordered table-hover table-striped">
+					<thead>
+						<tr>
+							<th>Nome do profissional</th>
+							<th>Perfil</th>
+							<th>Fase</th>
+							<th>Quantidade de horas trabalhadas</th>
+							<th>Preço ({{project.projectCurrency}})</th>
+							<th>Total ({{project.projectCurrency}})</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr ng-repeat="line in project.allocations">
+							<td>{{line.userName}}</td>
+							<td>{{line.profileName}}</td>
+							<td>{{line.phaseDescription}}</td>
+							<td>{{Math.round((line.totalHours + line.totalHoursOffset)*100)/100}}</td>
+							<td>{{line.price | currency:"" }}</td>
+							<td>{{(line.totalHours + line.totalHoursOffset)	* line.price | currency:"" }}</td>
+						</tr>
+					</tbody>
+				</table>
+				<div class="well well-sm pull-right">
+					<h5>
+						Total horas <span class="label label-default">{{Math.round(project.totalHours*100)/100}}</span>
+					</h5>
+					<h5>
+						Total valor ({{project.projectCurrency}}) <span class="label label-default">{{project.totalAmount | currency:"" }}</span>
+					</h5>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$('#date-container-revenue .input-daterange').datepicker({
+			format : "dd/mm/yyyy",
+			autoclose : true,
+			todayHighlight : true
+		});
+	});
+</script>

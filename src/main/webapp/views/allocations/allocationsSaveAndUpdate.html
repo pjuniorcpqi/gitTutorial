@@ -1,0 +1,176 @@
+<style type="text/css">
+.large-Modal .modal-dialog {
+	width: 800px;
+	height: 400px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto
+}
+</style>
+<div>
+	<form role="form" ng-submit="processAllocations()">
+		<!-- Page Heading -->
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Allocations</h3>
+					</div>
+					<div ng-show="erroMsg.length > 0">
+						<div class="alert alert-danger fade in">
+							<strong>Error!</strong>
+							<ul ng-repeat="err in erroMsg">
+								<li>{{err}}</li>
+							</ul>
+						</div>
+					</div>
+					<div ng-show="successMsg" class="alert alert-success fade in">
+						<button type="button" class="close" name="button"
+							data-dismiss="alert">&times;</button>
+						<strong>Success!</strong>
+					</div>
+					<div class="modal-body">
+						<input type="hidden" class="form-control" ng-model="allocation.id"
+							id="id"> <input type="hidden" class="form-control"
+							ng-model="allocation.user" id="user">
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="col-lg-8">
+									<label for="client">Cliente :</label> <select
+										ng-change="changeClient(allocation.phase.project.client)"
+										ng-model="allocation.phase.project.client"
+										class="form-control"
+										ng-options="client as client.name for client in allocationsReq.clients track by client.id" />
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="col-lg-8">
+									<label for="project">Project :</label> <select
+										ng-change="changeProject(allocation.phase.project,allocation.phase.project.client)"
+										ng-model="allocation.phase.project" class="form-control"
+										ng-options="project as project.title for project in pagedItemsproject track by project.id" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="col-lg-8">
+									<label for="phase">Phase*:</label> <select
+										ng-model="allocation.phase" class="form-control"
+										ng-options="phase as phase.description for phase in pagedItemsPhase track by phase.id" />
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="col-lg-6">
+									<label for="totalHours">Total Hours:</label> <input
+										type="number" class="form-control"
+										ng-model="allocation.totalHours" id="totalHours">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="col-lg-8">
+
+									<label for="profile">Profile*:</label> <select
+										ng-model="allocation.profile" class="form-control"
+										ng-options="profile as profile.description for profile in allocationsReq.profiles track by profile.id" />
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="col-lg-6">
+									<label for="price">Price:</label> <input type="number"
+										step="0.01" class="form-control" ng-model="allocation.price"
+										id="price">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="col-lg-6">
+									<label for="currency">Start Date*:</label> <input type="text"
+										class="form-control" ng-model="allocation.startDate"
+										id="startDate">
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="col-lg-6">
+									<label for="currency">End Date:</label> <input type="text"
+										class="form-control" ng-model="allocation.endDate"
+										id="endDate">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="col-lg-6">
+									<label for="hoursPerDay">Hours Per Day:</label> <input
+										type="text" class="form-control"
+										ng-model="allocation.hoursPerDay" id="hoursPerDay">
+								</div>
+							</div>
+							</br>
+							<div class="col-lg-6">
+								<div class="col-lg-6">
+									<input type="checkbox" ng-model="allocation.billable">
+									Billable
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="col-lg-12">
+									<label for="currency">Description:</label> <input type="text"
+										class="form-control" ng-model="allocation.description">
+								</div>
+							</div>
+						</div>
+						</br> </br>
+						<div class="row">
+							<div class="col-lg-3"></div>
+							<div class="col-lg-4">
+								<div>
+									<div>
+										<div class="col-lg-5">
+											<button type="submit" class="btn btn-success">Salvar</button>
+										</div>
+										<div class="col-lg-5">
+											<button class="btn btn-warning" type="button"
+												ng-click="cancel()">Cancel</button>
+										</div>
+										<div class="col-lg-2">
+											<button class="btn btn-warning" type="button"
+												ng-show="checkIsExistingAllocation()" ng-click="saveAsNew()">Save as new</button>
+										</div>
+
+									</div>
+								</div>
+								<div class="col-lg-3"></div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+			</div>
+	</form>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#startDate").datepicker({
+			format : "dd/mm/yyyy",
+			autoclose : true,
+			todayHighlight : true,
+			orientation : "bottom"
+		});
+		$("#endDate").datepicker({
+			format : "dd/mm/yyyy",
+			autoclose : true,
+			todayHighlight : true,
+			orientation : "bottom"
+		});
+	});
+</script>

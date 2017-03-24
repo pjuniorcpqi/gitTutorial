@@ -1,0 +1,187 @@
+<div ng-show="successMsg" class="alert alert-success fade in">
+	<button type="button" class="close" name="button" data-dismiss="alert">&times;</button>
+	<strong>Success!</strong>
+</div>
+
+<h2>Projects</h2>
+<br>
+<td><button type="button" data-toggle="modal" class="btn"
+		data-target="#modalUpdateProject" ng-click="startNewProject()"
+		name="createNew">Create New</button></td>
+<br>
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>TITLE</th>
+			<th>CLIENT</th>
+			<th class="textCenter">START DATE</th>
+			<th>END DATE</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody class="searchable">
+		<tr
+			ng-repeat="project in projects.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))">
+			<td>{{project.title}}</td>
+			<td>{{project.client.name}}</td>
+			<td class="textCenter">{{project.startDate | date:'dd/MM/yyyy'}}
+			</td>
+			<td class="textCenter">{{project.endDate | date:'dd/MM/yyyy'}}</td>
+			<td class="textCenter">
+				<button type="button" data-toggle="modal" class="btn"
+					data-target="#modalUpdateProject" ng-click="getProject(project)"
+					name="update">Update</button>
+			</td>
+			<td class="textCenter">
+				<button type="button" data-toggle="modal" class="btn btn-danger btn"
+					data-target="#modalDeleteProject" ng-click="getProject(project)"
+					name="delete">Delete</button>
+			</td>
+		</tr>
+
+	</tbody>
+</table>
+View <select ng-model="viewBy" ng-change="setItemsPerPage(viewBy)" ng-options="viewBy for viewBy in viewByOptions"></select> records at a time.
+
+<div>
+	<uib-pagination total-items="totalItems" ng-model="currentPage"
+		ng-change="pageChanged()" class="pagination-sm"
+		items-per-page="itemsPerPage"></uib-pagination>
+</div>
+
+<!-- Modal Update -->
+<div class="modal fade" id="modalUpdateProject" role="dialog">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">x</button>
+				<h4 class="modal-title">{{ formProject.id == undefined ?
+					"Create New Project" : "Update project "}}</h4>
+			</div>
+			<div class="modal-body">
+				<div ng-show="erroMsg.length > 0">
+					<div class="alert alert-danger fade in">
+						<strong>Error!</strong>
+						<ul ng-repeat="err in erroMsg">
+							<li>{{err}}</li>
+						</ul>
+					</div>
+				</div>
+				<form role="form" ng-submit="processProject()">
+					<div class="form-group">
+						<label>Client:<span class="required">*</span></label> <select
+							ng-model="formProject.client" class="form-control"
+							ng-options="client as client.name for client in clients track by client.id"
+							ng-change="update()" />
+					</div>
+					<div class="form-group">
+						<label>Project Name:<span class="required">*</span></label> <input
+							type="text" class="form-control" ng-model="formProject.title"
+							value="formProject.title">
+					</div>
+
+					<div class="form-group">
+						<label>Project Type:</label> <select
+							ng-model="formProject.projectType" class="form-control"
+							ng-options="projectType as projectType.name for projectType in projectTypes track by projectType.id" />
+					</div>
+
+					<div class="form-group">
+						<label>Income Type:</label> <select
+							ng-model="formProject.incomeType" class="form-control"
+							ng-options="incomeType as incomeType.name for incomeType in incomeTypes track by incomeType.id" />
+					</div>
+					
+					<div class="form-group">
+						<label>Currency:</label> <select
+							ng-model="formProject.currency" class="form-control"
+							ng-options="currency as currency.currency for currency in currencies track by currency.id" />
+					</div>
+
+					<div class="form-group">
+						<label>Internal Project:</label>
+						<div class="radio">
+							<label><input type="radio" name="formProject.internal"
+								ng-value="true" ng-model="formProject.internal">Sim</label>
+						</div>
+						<div class="radio">
+							<label><input type="radio" name="formProject.internal"
+								ng-value="false" ng-model="formProject.internal">Nao</label>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label>Start Date:<span class="required">*</span></label>
+						<div>
+							<input id="datepickerStart" type="text" class="form-control"
+								name="startDate" ng-model="formProject.startDate" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label>End Date:<span class="required">*</span></label>
+						<div>
+							<input type="text" id="datepickerEnd" class="form-control"
+								name="endDate" ng-model="formProject.endDate" />
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label>Description:</label>
+						<textarea class="form-control" rows="5"
+							ng-model="formProject.description" />
+					</div>
+
+					<!-- 					<pre>formProject = {{formProject | json}}</pre> -->
+
+					<div class="modal-footer">
+						<button id="btnCloseModal" class="btn" data-dismiss="modal"
+							aria-hidden="true">Cancel</button>
+						<button type="submit" class="btn btn-success">Save</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Modal Delete -->
+<div class="modal fade" id="modalDeleteProject" role="dialog">
+	<div class="modal-dialog">
+		<!-- Modal content-->
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal"
+					aria-hidden="true">x</button>
+				<h3>Please Confirm</h3>
+			</div>
+			<div class="modal-body">
+				<form role="form" ng-submit="deleteProject()">
+					<div>Are you sure you want to delete Project:
+						{{formProject.title}} ?</div>
+					<div class="modal-footer">
+						<button id="btnCloseModal" class="btn" data-dismiss="modal"
+							aria-hidden="true">Cancel</button>
+						<button type="submit" class="btn btn-success">OK</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+ 	$(document).ready(function () {
+            	$("#datepickerStart").datepicker({
+         	    format: "dd/mm/yyyy",
+         	    autoclose: true,
+         	    todayHighlight: true
+         	});
+          	$("#datepickerEnd").datepicker({
+         	    format: "dd/mm/yyyy",
+         	    autoclose: true,
+         	    todayHighlight: true
+         	});
+ 	});
+</script>

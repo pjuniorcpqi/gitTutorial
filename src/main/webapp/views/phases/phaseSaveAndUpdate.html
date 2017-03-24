@@ -1,0 +1,114 @@
+<style type="text/css">
+.large-Modal .modal-dialog {
+	width: 800px;
+	height: 400px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: auto
+}
+</style>
+<div ng-controller="ModalController">
+	<form role="form" ng-submit="processPhase()">
+		<!-- Page Heading -->
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h3 class="modal-title">Phase</h3>
+					</div>
+					<div ng-show="erroMsg.length > 0">
+						<div class="alert alert-danger fade in">
+							<strong>Error!</strong>
+							<ul ng-repeat="err in erroMsg">
+								<li>{{err}}</li>
+							</ul>
+						</div>
+					</div>
+					<div ng-show="successMsg" class="alert alert-success fade in">
+						<button type="button" class="close" name="button"
+							data-dismiss="alert">&times;</button>
+						<strong>Success!</strong>
+					</div>
+					<div class="modal-body">
+					<input type="hidden"
+										class="form-control" ng-model="phase.id"
+										id="id">
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="col-lg-6">
+									<label for="currency">Projeto*:</label> <select
+										ng-model="phase.project" class="form-control"
+										ng-options="project as project.title for project in projects track by project.id" />
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-6">
+								<div class="col-lg-6">
+									<label for="currency">Start Date*:</label> <input type="text"
+										class="form-control"  ng-model="phase.startDate"
+										id="startDate">
+								</div>
+							</div>
+							<div class="col-lg-6">
+								<div class="col-lg-6">
+									<label for="currency">End Date*:</label> <input type="text"
+										class="form-control"   ng-model="phase.endDate" id="endDate">
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-lg-12">
+								<div class="col-lg-8">
+									<label for="descricao">Description*:</label>
+									<textarea class="form-control" ng-model="phase.description"
+										rows="3"></textarea>
+
+
+								</div>
+							</div>
+						</div>
+						</br> </br>
+						<div class="row">
+							<div class="col-lg-3"></div>
+							<div class="col-lg-4">
+								<div>
+									<div>
+										<div class="col-lg-6">
+											<button type="submit" class="btn btn-success">Salvar</button>
+										</div>
+										<div class="col-lg-6">
+											 <button class="btn btn-warning" type="button" ng-click="cancel()">Cancel</button>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="col-lg-3"></div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</form>
+</div>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("#startDate").datepicker({
+			format : "dd/mm/yyyy",
+			autoclose : true,
+			todayHighlight : true,
+			orientation : "bottom"
+		});
+		$("#endDate").datepicker({
+			format : "dd/mm/yyyy",
+			autoclose : true,
+			todayHighlight : true,
+			orientation : "bottom"
+		});
+	});
+</script>
